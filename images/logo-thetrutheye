@@ -1,0 +1,10 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <rect width="128" height="128" rx="64" fill="#FF3B30"/>
+  <circle cx="64" cy="64" r="40" fill="white"/>
+  <!-- Iris -->
+  <circle cx="64" cy="64" r="20" fill="#4A90E2"/>
+  <!-- Pupil -->
+  <circle cx="64" cy="64" r="10" fill="white"/>
+  <!-- Play Button "Highlight" -->
+  <path d="M52 50 L52 78 L76 64 L52 50 Z" fill="#FF3B30" fill-opacity="0.8"/>
+</svg>
