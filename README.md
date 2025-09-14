@@ -1,9 +1,9 @@
 # YTruth Browser Extension
 
-![YTruth Logo](https://raw.githubusercontent.com/YTruthIsOutThere/YTruth/images/logo.svg)
-![YTruth Logo Teh Truth Eye](https://raw.githubusercontent.com/YTruthIsOutThere/YTruth/images/logo-thetrutheye.svg)
-![YTruth Logo Speechbubble](https://raw.githubusercontent.com/YTruthIsOutThere/YTruth/images/logo-speechbubble.svg)
-![YTruth Logo Praise](https://raw.githubusercontent.com/YTruthIsOutThere/YTruth/images/logo-christian.svg)
+![YTruth Logo](https://raw.githubusercontent.com/YTruthIsOutThere/YTruth/main/images/logo.svg)
+![YTruth Logo Teh Truth Eye](https://raw.githubusercontent.com/YTruthIsOutThere/YTruth/main/images/logo-thetrutheye.svg)
+![YTruth Logo Speechbubble](https://raw.githubusercontent.com/YTruthIsOutThere/YTruth/main/images/logo-speechbubble.svg)
+![YTruth Logo Praise](https://raw.githubusercontent.com/YTruthIsOutThere/YTruth/main/images/logo-christian.svg)
 
 ## A transparent, community-powered browser extension that reveals the editorial bias and factuality of YouTube channels directly on your recommendation feed. Browse with context.
 🧭 The Plan & Philosophy
