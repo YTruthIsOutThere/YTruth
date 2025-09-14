@@ -1,0 +1,14 @@
+{
+  "channels": {
+    "MSNBC": {
+      "bias": "left",
+      "factuality": "high",
+      "source": "MBFC"
+    },
+    "Fox News": {
+      "bias": "right",
+      "factuality": "mixed",
+      "source": "MBFC"
+    }
+  }
+}
