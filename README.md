@@ -8,10 +8,10 @@
 
 ## A transparent, community-powered browser extension that reveals the editorial bias and factuality of YouTube channels directly on your recommendation feed. Browse with context.
 
-### *Note this plugin does not focus on left-right bias, as the horseshoe hypothesis is bs anyway.*
+#### *Note this plugin does not focus on left-right bias, as the horseshoe hypothesis is bs anyway.*
 
 
-🧭 The Plan & Philosophy
+## 🧭 The Plan & Philosophy
 
 YTruth is built on principles of transparency, privacy, and community. We believe in providing tools to understand media diets, not in preaching or creating division.
 
