@@ -1,47 +1,9 @@
 # YTruth Browser Extension
 
-<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w.w3.org/2000/svg">
-  <rect width="128" height="128" rx="20" fill="#4A90E2"/>
-  <!-- The play button body becomes a checkmark stem -->
-  <path d="M45 35 L45 93 L95 64 L45 35 Z" fill="white"/>
-  <!-- The checkmark flag -->
-  <path d="M80 45 L95 60 L110 40" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-</svg>
-
-<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
-  <rect width="128" height="128" rx="64" fill="#FF3B30"/>
-  <circle cx="64" cy="64" r="40" fill="white"/>
-  <!-- Iris -->
-  <circle cx="64" cy="64" r="20" fill="#4A90E2"/>
-  <!-- Pupil -->
-  <circle cx="64" cy="64" r="10" fill="white"/>
-  <!-- Play Button "Highlight" -->
-  <path d="M52 50 L52 78 L76 64 L52 50 Z" fill="#FF3B30" fill-opacity="0.8"/>
-</svg>
-
-<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
-  <!-- Speech Bubble -->
-  <path d="M20 40 A10 10 0 0 0 30 50 L30 80 A10 10 0 0 0 40 90 L80 90 A10 10 0 0 0 90 80 L90 50 A10 10 0 0 1 100 40 L108 40 A10 10 0 0 1 118 50 L118 80 A10 10 0 0 1 108 90 L100 90 L100 110 L80 90 L40 90 A10 10 0 0 1 30 80 L30 50 A10 10 0 0 1 40 40 Z" fill="#4A90E2"/>
-  <!-- Checkmark inside -->
-  <path d="M50 60 L65 75 L90 45" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-</svg>
-
-
-<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background Circle -->
-  <circle cx="64" cy="64" r="60" fill="#4A90E2"/>
-  
-  <!-- Central White Circle (creates a soft halo effect) -->
-  <circle cx="64" cy="64" r="48" fill="white"/>
-  
-  <!-- Main Chi Rho Symbol in Blue -->
-  <path d="M 52 40 L 52 88 L 76 88 L 76 40 L 52 40 Z" fill="#4A90E2"/> <!-- The Rho (P) stem -->
-  <path d="M 40 52 L 88 52 L 88 76 L 40 76 L 40 52 Z" fill="#4A90E2"/> <!-- The Chi (X) crossbar -->
-  
-  <!-- Play Button "Arrowhead" superimposed in White -->
-  <path d="M 58 50 L 58 78 L 78 64 L 58 50 Z" fill="white"/>
-</svg>
-
+![YTruth Logo](https://raw.githubusercontent.com/YTruthIsOutThere/YTruth/images/logo.svg)
+![YTruth Logo Teh Truth Eye](https://raw.githubusercontent.com/YTruthIsOutThere/YTruth/images/logo-thetrutheye.svg)
+![YTruth Logo Speechbubble](https://raw.githubusercontent.com/YTruthIsOutThere/YTruth/images/logo-speechbubble.svg)
+![YTruth Logo Praise](https://raw.githubusercontent.com/YTruthIsOutThere/YTruth/images/logo-christian.svg)
 
 ## A transparent, community-powered browser extension that reveals the editorial bias and factuality of YouTube channels directly on your recommendation feed. Browse with context.
 🧭 The Plan & Philosophy
