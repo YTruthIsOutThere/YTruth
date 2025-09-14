@@ -1,0 +1,14 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="64" cy="64" r="60" fill="#4A90E2"/>
+  
+  <!-- Central White Circle (creates a soft halo effect) -->
+  <circle cx="64" cy="64" r="48" fill="white"/>
+  
+  <!-- Main Chi Rho Symbol in Blue -->
+  <path d="M 52 40 L 52 88 L 76 88 L 76 40 L 52 40 Z" fill="#4A90E2"/> <!-- The Rho (P) stem -->
+  <path d="M 40 52 L 88 52 L 88 76 L 40 76 L 40 52 Z" fill="#4A90E2"/> <!-- The Chi (X) crossbar -->
+  
+  <!-- Play Button "Arrowhead" superimposed in White -->
+  <path d="M 58 50 L 58 78 L 78 64 L 58 50 Z" fill="white"/>
+</svg>
