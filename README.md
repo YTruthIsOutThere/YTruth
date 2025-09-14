@@ -8,7 +8,8 @@
 
 ## A transparent, community-powered browser extension that reveals the editorial bias and factuality of YouTube channels directly on your recommendation feed. Browse with context.
 
-*Note that it does not focus on left-right bias, as the horseshoe hypothesis is bs anyway.*
+### *Note this plugin does not focus on left-right bias, as the horseshoe hypothesis is bs anyway.*
+
 
 🧭 The Plan & Philosophy
 
