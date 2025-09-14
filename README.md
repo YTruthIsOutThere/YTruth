@@ -1,11 +1,15 @@
 # YTruth Browser Extension
 
 ![YTruth Logo](https://raw.githubusercontent.com/YTruthIsOutThere/YTruth/main/images/logo.svg)
+![YTruth Logo MoreCrazy](https://raw.githubusercontent.com/YTruthIsOutThere/YTruth/main/images/logo-morecrazy.svg.svg)
 ![YTruth Logo Teh Truth Eye](https://raw.githubusercontent.com/YTruthIsOutThere/YTruth/main/images/logo-thetrutheye.svg)
 ![YTruth Logo Speechbubble](https://raw.githubusercontent.com/YTruthIsOutThere/YTruth/main/images/logo-speechbubble.svg)
 ![YTruth Logo Praise](https://raw.githubusercontent.com/YTruthIsOutThere/YTruth/main/images/logo-christian.svg)
 
 ## A transparent, community-powered browser extension that reveals the editorial bias and factuality of YouTube channels directly on your recommendation feed. Browse with context.
+
+Note that it does not focus on left-right bias, as the horseshoe hypothesis is bs anyway.
+
 🧭 The Plan & Philosophy
 
 YTruth is built on principles of transparency, privacy, and community. We believe in providing tools to understand media diets, not in preaching or creating division.
