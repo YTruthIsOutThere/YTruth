@@ -1,7 +1,7 @@
 # YTruth Browser Extension
 
 ![YTruth Logo](https://raw.githubusercontent.com/YTruthIsOutThere/YTruth/main/images/logo.svg)
-![YTruth Logo MoreCrazy](https://raw.githubusercontent.com/YTruthIsOutThere/YTruth/main/images/logo-morecrazy.svg.svg)
+![YTruth Logo MoreCrazy](https://raw.githubusercontent.com/YTruthIsOutThere/YTruth/main/images/logo-morecrazy.svg)
 ![YTruth Logo Teh Truth Eye](https://raw.githubusercontent.com/YTruthIsOutThere/YTruth/main/images/logo-thetrutheye.svg)
 ![YTruth Logo Speechbubble](https://raw.githubusercontent.com/YTruthIsOutThere/YTruth/main/images/logo-speechbubble.svg)
 ![YTruth Logo Praise](https://raw.githubusercontent.com/YTruthIsOutThere/YTruth/main/images/logo-christian.svg)
