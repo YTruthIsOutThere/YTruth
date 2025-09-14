@@ -1,14 +1,13 @@
-# YTruth
-YTruth Browser Extension
+# YTruth Browser Extension
 
 https://via.placeholder.com/150x150/4A90E2/FFFFFF?text=YTruth <!-- Replace with your actual logo -->
 
-A transparent, community-powered browser extension that reveals the editorial bias and factuality of YouTube channels directly on your recommendation feed. Browse with context.
+## A transparent, community-powered browser extension that reveals the editorial bias and factuality of YouTube channels directly on your recommendation feed. Browse with context.
 🧭 The Plan & Philosophy
 
 YTruth is built on principles of transparency, privacy, and community. We believe in providing tools to understand media diets, not in preaching or creating division.
 
-Our phased development plan is designed to be sustainable and community-focused:
+## Our phased development plan is designed to be sustainable and community-focused:
 
     Phase 1: The Free Core (Current State)
     The extension works entirely locally on your machine. It uses a manually and community-curated database of channels (bias_database.json) to add simple labels (e.g., Left · High, Right · Mixed) next to videos. No data is ever sent to any server. This is completely free and open-source.
@@ -19,7 +18,7 @@ Our phased development plan is designed to be sustainable and community-focused:
     Phase 3: A Self-Sustaining Public Good
     The goal is for the project to be sustained by its community. The database itself, grown through millions of user interactions and contributions, will become a valuable public resource for understanding the digital media landscape.
 
-🚀 How It Works
+## 🚀 How It Works
 
     Local Analysis: When you load YouTube, the YTruth extension loads a database of channel ratings into your browser's memory.
 
@@ -29,7 +28,7 @@ Our phased development plan is designed to be sustainable and community-focused:
 
     Your Data Stays Yours: All of this happens on your device. Your browsing history and YouTube data never leave your computer.
 
-📦 Installation (Firefox Developer Mode)
+## 📦 Installation (Firefox Developer Mode)
 
 Since YTruth is in active development, you need to install it manually. This is easy!
 
@@ -45,7 +44,7 @@ Since YTruth is in active development, you need to install it manually. This is 
 
     You're Done! The extension is now active. Navigate to YouTube to see it in action. You may need to refresh the page.
 
-🔍 The Data - Our Core
+## 🔍 The Data - Our Core
 
 The truth is, bias is hard to quantify. We don't claim to have the final answer. Instead, we rely on a transparent methodology:
 
@@ -55,7 +54,7 @@ The truth is, bias is hard to quantify. We don't claim to have the final answer.
 
     Our Promise: We will never assign a rating without a citable source or a clear, logical inference that we document.
 
-🤝 How to Contribute
+## 🤝 How to Contribute
 
 This project is nothing without its community. Here's how you can help:
 
@@ -74,7 +73,7 @@ This project is nothing without its community. Here's how you can help:
     Spread the Word: Share YTruth with others who are interested in media literacy and navigating information spaces wisely.
 
 
-🤝 Current Folder Outline
+## 🤝 Current Folder Outline
 
   contextscope-extension/
   ├── images/ (for icons)
@@ -88,7 +87,7 @@ This project is nothing without its community. Here's how you can help:
   └── README.md
 
 
-🗺️ Roadmap & Future Features
+## 🗺️ Roadmap & Future Features
 
     v0.1: Basic functionality with a seed database of ~100 channels (Current Goal)
 
@@ -100,7 +99,7 @@ This project is nothing without its community. Here's how you can help:
 
     v1.0: Publish on Firefox Add-ons and Chrome Web Store.
 
-⚠️ Limitations & Disclaimer
+## ⚠️ Limitations & Disclaimer
 
 YTruth is a tool for context, not a truth machine. It is provided "as is" for educational and informational purposes.
 
@@ -110,10 +109,11 @@ YTruth is a tool for context, not a truth machine. It is provided "as is" for ed
 
     The presence of a label does not constitute an endorsement or condemnation of the channel's views.
 
-📜 License
+## 📜 License
 
 This project is licensed under the MIT License. This means you are free to use, modify, and distribute the code, but it comes with no warranty. See the LICENSE file for details.
-🙋 FAQ
+
+## 🙋 FAQ
 
 Q: Will this slow down YouTube?
 A: Negligibly. The script only runs when you load YouTube and is designed to be very efficient.
@@ -127,4 +127,4 @@ A: We strive for neutrality. Our goal is to accurately reflect the consensus of 
 
 __ 
 
-Note that this was written by AI
+Note that this was all written by AI in a few minutes and should be taken with a grain of salt
