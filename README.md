@@ -10,11 +10,15 @@
 
 #### *Note this plugin does not focus on left-right bias, as the horseshoe hypothesis is bs anyway.*
 
-The aims are:
+Editorial Development Notes:
 Showing echochambers and opinionbubbles based on the current recommended vidoes in the feed/website, not accessing past history data.
 This means showing the factuality and editorial bias and other categories, not focussing on left-right biases.
 Showing the factuality and editorial bias and other categories of specific videos as tags or keynotes under each recommendet video for a quick overview of the contents of the video. 
 Preferably these information are harvested by short AI/LLM analysis, eventhough this is probably not feasable for now.
+
+The aims are: Showing echochambers and opinionbubbles based on the current recommended vidoes in the feed/website, not accessing past history data. This means showing the factuality and editorial bias and other categories, not focussing on left-right biases. Showing the factuality and editorial bias and other categories of specific videos as tags or keynotes under each recommendet video for a quick overview of the contents of the video. Preferably these information are harvested by short AI/LLM analysis, eventhough this is probably not feasable for now.
+
+so we have to find how we can populate the databases now or how to - best create local (client based) ai queries to free ai providers as long as we are in the free plan. but we might use all other means as well, as f.i. harvesting public resources or network data to show factuality or editorial biases or echo/bubble/opinion chambers
 
 
 ## 🧭 The Plan & Philosophy
