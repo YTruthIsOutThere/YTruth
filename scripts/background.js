@@ -88,7 +88,7 @@ async function saveAnalysisToDB(videoId, analysis) {
 // --- 3. AI Analysis Function ---
 
 async function getAIAnalysis(videoData) {
-  const { title, channel } = videoData;
+  // Corrected Vercel URL
   const VERCEL_URL = "https://ytruth-epr6esvk7-ytruthisouttheres-projects.vercel.app";
   
   try {
