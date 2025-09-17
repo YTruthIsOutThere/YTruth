@@ -7,9 +7,9 @@ const channelDbUrl = 'https://raw.githubusercontent.com/YTruthIsOutThere/YTruth/
 const videoDbUrl = 'https://raw.githubusercontent.com/YTruthIsOutThere/YTruth/main/data/video_database.json';
 
 
-// IMPORTANT: Do not hard-code your token here.
-// Instead, load it from a separate, untracked file or environment variable.
-const HUGGING_FACE_TOKEN = "YOUR_HF_TOKEN"; 
+
+// Load it from a separate, untracked file or environment variable.
+import { HUGGING_FACE_TOKEN } from "./config.js";
 
 let channelDatabase = {};
 let videoDatabase = {};
@@ -93,14 +93,8 @@ async function saveAnalysisToDB(videoId, analysis) {
 
 async function getAIAnalysis(videoData) {
   const { title, channel } = videoData;
-  const prompt = `Classify the YouTube video "${title}" by "${channel}" based on its primary intent, factuality, and whether it is political in nature.
-  Provide a single JSON object with the following keys and values:
-  - factuality: ["High", "Mixed", "Low"]
-  - politicalness: ["Political", "Non-Political"]
-  - editorial_bias: ["News", "Opinion/Commentary", "Educational/Instructional", "Conspiracy/Pseudoscience", "Entertainment"]
+  const prompt = `This is a video by "${channel}" titled "${title}". Classify its factuality, politicalness, and editorial bias.`;
   
-  Example: {"factuality": "High", "politicalness": "Political", "editorial_bias": "News"}`;
-
   try {
     const response = await fetch("https://api-inference.huggingface.co/models/facebook/bart-large-mnli", {
       headers: { Authorization: `Bearer ${HUGGING_FACE_TOKEN}` },
@@ -108,35 +102,46 @@ async function getAIAnalysis(videoData) {
       body: JSON.stringify({
         inputs: prompt,
         parameters: { 
-          candidate_labels: ["High", "Mixed", "Low", "Political", "Non-Political", "News", "Opinion/Commentary", "Educational/Instructional", "Conspiracy/Pseudoscience", "Entertainment"]
+          candidate_labels: ["high factuality", "low factuality", "political", "non-political", "opinion", "news", "educational"]
         }
       })
     });
     
     const result = await response.json();
-    const aiLabels = result.labels; 
+    const scores = {};
     
-    const factuality = aiLabels.includes("High") ? "High" : aiLabels.includes("Mixed") ? "Mixed" : "Low";
-    const politicalness = aiLabels.includes("Political") ? "Political" : "Non-Political";
-    const editorial_bias = aiLabels.includes("News") ? "News" : aiLabels.includes("Opinion/Commentary") ? "Opinion/Commentary" : aiLabels.includes("Educational/Instructional") ? "Educational/Instructional" : aiLabels.includes("Conspiracy/Pseudoscience") ? "Conspiracy/Pseudoscience" : "Entertainment";
-    
+    // We can use a simpler approach to get the scores directly
+    // based on our candidate labels.
+    for (let i = 0; i < result.labels.length; i++) {
+        const label = result.labels[i];
+        const score = result.scores[i];
+        
+        if (label === "high factuality") scores.factuality = score;
+        if (label === "political") scores.politicalness = score;
+        if (label === "opinion") scores.editorial_bias = score; // This is a simplified example
+    }
+
+    // Combine results into our final analysis object
     const analysis = {
-      text: `${politicalness.charAt(0)} · ${factuality.charAt(0)} · ${editorial_bias.charAt(0)}`,
-      tooltip: `Political: ${politicalness}\nFactuality: ${factuality}\nBias: ${editorial_bias}`,
-      political_leaning: politicalness
+      factuality: scores.factuality,
+      politicalness: scores.politicalness,
+      editorial_bias: scores.editorial_bias,
+      text: `${(scores.politicalness * 100).toFixed(0)}% Pol`,
+      tooltip: `Political: ${(scores.politicalness * 100).toFixed(2)}%\nFactuality: ${(scores.factuality * 100).toFixed(2)}%\nOpinion: ${(scores.editorial_bias * 100).toFixed(2)}%`,
     };
 
     return analysis;
   } catch (error) {
     console.error("AI analysis failed:", error);
     return { 
-      text: 'AI Failed', 
-      tooltip: 'AI analysis could not be completed.',
-      political_leaning: "Non-Political"
+      factuality: 0,
+      politicalness: 0,
+      editorial_bias: 0,
+      text: 'AI Failed',
+      tooltip: 'AI analysis could not be completed.'
     };
   }
 }
-
 
 // --- 4. Main Message Listener ---
 
