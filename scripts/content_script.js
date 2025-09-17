@@ -1,47 +1,54 @@
 // scripts/content_script.js
 
-// 1. Fetch the local database
-const databaseUrl = chrome.runtime.getURL('data/bias_database.json');
-fetch(databaseUrl)
-  .then(response => response.json())
-  .then(data => {
-    scanPage(data.channels);
-  });
+// Function to find video elements.
+function findVideos() {
+  return document.querySelectorAll('ytd-video-renderer, ytd-rich-item-renderer');
+}
 
-// 2. Function to scan the page
-function scanPage(channelData) {
-  // Find all video elements. This selector might need tuning!
-  const videoElements = document.querySelectorAll('ytd-video-renderer, ytd-rich-item-renderer');
+// Function to inject a label onto a video element.
+function injectLabel(videoElement, analysis) {
+  if (!videoElement) return;
+  const titleElement = videoElement.querySelector('#video-title');
+  if (!titleElement || videoElement.querySelector('.contextscope-label')) {
+    return;
+  }
 
-  videoElements.forEach(videoEl => {
-    // 3. Extract the channel name - This is the trickiest part, requires inspecting YouTube's HTML
-    const channelNameElement = videoEl.querySelector('#channel-name a, #byline a');
-    if (!channelNameElement) return;
-    const channelName = channelNameElement.textContent.trim();
+  const label = document.createElement('span');
+  label.className = `contextscope-label label-${analysis.class}`;
+  label.textContent = analysis.text;
+  label.title = analysis.tooltip;
 
-    // 4. Check our database
-    const channelInfo = channelData[channelName];
-    if (channelInfo) {
-      // 5. Create and inject the label
-      injectLabel(videoEl, channelInfo);
+  const parent = titleElement.parentElement;
+  if (parent) {
+    parent.appendChild(label);
+  }
+}
+
+// Main processing function for the page.
+function processPage() {
+  const videos = findVideos();
+  videos.forEach(video => {
+    const videoData = {
+      id: video.querySelector('a#video-title')?.href.match(/v=([^&]+)/)?.[1],
+      channel: video.querySelector('#channel-name a, #byline a')?.textContent.trim(),
+      title: video.querySelector('#video-title')?.textContent.trim(),
+      element: video
+    };
+
+    if (videoData.id && videoData.channel) {
+      // Send a message to the background script to start analysis
+      chrome.runtime.sendMessage({ type: 'analyze_video', videoData }, (response) => {
+        if (response && response.analysis) {
+          injectLabel(video, response.analysis);
+        }
+      });
     }
   });
 }
 
-// 6. Function to create the label
-function injectLabel(videoElement, channelInfo) {
-  const label = document.createElement('span');
-  label.className = 'contextscope-label';
-  label.textContent = `${channelInfo.bias} · ${channelInfo.factuality}`;
-  label.style.marginLeft = '8px';
-  label.style.padding = '2px 6px';
-  label.style.borderRadius = '4px';
-  label.style.fontSize = '0.8em';
-  label.style.backgroundColor = getColorForBias(channelInfo.bias); // You'd write this function
+// Use a MutationObserver to watch for new content.
+const observer = new MutationObserver(processPage);
+observer.observe(document.body, { childList: true, subtree: true });
 
-  // Find a good place to insert the label, often near the title
-  const titleElement = videoElement.querySelector('#video-title');
-  if (titleElement) {
-    titleElement.parentNode.appendChild(label);
-  }
-}
+// Initial run on page load.
+processPage();
