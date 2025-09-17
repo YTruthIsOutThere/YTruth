@@ -27,9 +27,5 @@
   ],
   "background": {
     "service_worker": "background.js"
-  },
-  "action": {
-    "default_title": "YTruth",
-    "default_popup": "popup/popup.html"
   }
 }
