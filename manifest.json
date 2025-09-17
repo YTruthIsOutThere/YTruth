@@ -9,6 +9,15 @@
     "48": "images/icon-48.png",
     "128": "images/icon-128.png"
   },
+  "permissions": [
+    "storage", 
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://*.youtube.com/*",
+    "https://api-inference.huggingface.co/*",
+    "https://raw.githubusercontent.com/*"
+  ],
   "content_scripts": [
     {
       "matches": ["https://*.youtube.com/*"],
@@ -16,13 +25,13 @@
       "css": ["styles/overlay.css"]
     }
   ],
-  "host_permissions": [
-    "https://*.youtube.com/*"
-  ],
+  "background": {
+    "service_worker": "scripts/background.js"
+  }
   "web_accessible_resources": [
     {
-      "resources": ["data/bias_database.json"],
-      "matches": ["https://*.youtube.com/*"]
+      "resources": ["scripts/config.js"],
+      "matches": ["<all_urls>"]
     }
   ]
 }
