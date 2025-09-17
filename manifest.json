@@ -22,7 +22,7 @@
     {
       "matches": ["https://*.youtube.com/*"],
       "js": ["scripts/content.js"],
-      "css": ["styles/overlay.css"]
+      "css": ["styles/style.css"]
     }
   ],
   "background": {
