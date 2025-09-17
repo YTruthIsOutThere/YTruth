@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "ContextScope",
+  "name": "YTruth",
   "version": "0.1",
   "description": "Adds bias and factuality indicators to YouTube.",
   "icons": {
@@ -10,22 +10,26 @@
     "128": "images/icon-128.png"
   },
   "permissions": [
-    "storage", 
-    "tabs"
+    "storage",
+    "activeTab"
   ],
   "host_permissions": [
     "https://*.youtube.com/*",
-    "https://api-inference.huggingface.co/*",
+    "https://ytruth-epr6esvk7-ytruthisouttheres-projects.vercel.app/*",
     "https://raw.githubusercontent.com/*"
   ],
   "content_scripts": [
     {
       "matches": ["https://*.youtube.com/*"],
-      "js": ["scripts/content_script.js"],
+      "js": ["scripts/content.js"],
       "css": ["styles/overlay.css"]
     }
   ],
   "background": {
-      "scripts": ["background.js"]
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "YTruth",
+    "default_popup": "popup/popup.html"
   }
 }
