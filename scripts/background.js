@@ -11,36 +11,39 @@ const videoDbUrl = 'https://raw.githubusercontent.com/YTruthIsOutThere/YTruth/ma
 
 let channelDatabase = {};
 let videoDatabase = {};
+let dbFetchAttempted = false;
 
 async function fetchDatabases() {
+    if (dbFetchAttempted) return;
+    dbFetchAttempted = true;
+
     try {
+        console.log("Fetching databases...");
         // Fetch channel database
         const channelRes = await fetch(channelDbUrl);
-        if (!channelRes.ok) { // Check for HTTP errors
+        if (!channelRes.ok) {
             throw new Error(`HTTP error! status: ${channelRes.status} for channel DB`);
         }
-        const channelData = await channelRes.json();
-        channelDatabase = channelData.channels;
+        channelDatabase = (await channelRes.json()).channels || {};
 
         // Fetch video database
         const videoRes = await fetch(videoDbUrl);
-        if (!videoRes.ok) { // Check for HTTP errors
+        if (!videoRes.ok) {
             throw new Error(`HTTP error! status: ${videoRes.status} for video DB`);
         }
-        const videoData = await videoRes.json();
-        videoDatabase = videoData.videos;
-        
-        console.log("Databases fetched successfully from GitHub.");
+        videoDatabase = (await videoRes.json()).videos || {};
+
+        console.log("Databases fetched successfully:", Object.keys(channelDatabase).length, "channels;", Object.keys(videoDatabase).length, "videos.");
     } catch (error) {
-        // This console log will now only appear if there's an actual error.
-        console.error("Failed to fetch databases from GitHub:", error);
-        // You might want to reset databases to empty arrays if fetching fails
+        console.error("Failed to fetch databases:", error);
         channelDatabase = {};
         videoDatabase = {};
     }
 }
 
+// Call on startup and on messages
 fetchDatabases();
+
 
 
 // --- 2. IndexedDB Setup for Caching ---
@@ -136,9 +139,10 @@ async function getAIAnalysis(videoData) {
 }
 
 // --- 4. Main Message Listener ---
-
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.type === 'analyze_video') {
+        fetchDatabases(); // Ensure DBs are fetched
+
         const { videoData } = request;
         const { id, channel } = videoData;
 
