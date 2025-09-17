@@ -5,15 +5,15 @@ console.log("YTruth content script loaded!");
 // Function to create and inject the initial "Analyze" button or reload symbol
 function createInitialIndicator(videoElement) {
     let indicator = videoElement.querySelector('.ytruth-indicator');
-    if (indicator) return; // Indicator already exists
+    if (indicator) return;
 
     indicator = document.createElement('span');
     indicator.className = 'ytruth-indicator';
-    indicator.textContent = '🔍'; // Magnifying glass emoji
+    indicator.textContent = '🔍';
     indicator.title = 'Click to analyze';
 
     indicator.addEventListener('click', (event) => {
-        event.stopPropagation(); // Prevent navigating to the video
+        event.stopPropagation();
         const videoData = getVideoData(videoElement);
         if (videoData) {
             console.log("Requesting analysis for:", videoData.title);
@@ -21,15 +21,40 @@ function createInitialIndicator(videoElement) {
                 type: 'analyze_video',
                 videoData: videoData
             });
-            indicator.textContent = '⏳'; // Change to hourglass while loading
+            indicator.textContent = '⏳';
         }
     });
 
-    const videoTitleElement = videoElement.querySelector('#video-title');
+    const videoTitleElement = videoElement.querySelector('a#video-title');
     if (videoTitleElement) {
         videoTitleElement.after(indicator);
     }
 }
+
+// Helper function to extract video data
+function getVideoData(videoElement) {
+    const videoLinkElement = videoElement.querySelector('a#video-title');
+    const channelNameElement = videoElement.querySelector('#channel-name a');
+
+    if (!videoLinkElement || !channelNameElement) {
+        return null;
+    }
+
+    const videoId = videoLinkElement.href.split('=')[1];
+    const channelName = channelNameElement.textContent;
+    const videoTitle = videoLinkElement.textContent;
+
+    if (videoId && channelName && videoTitle) {
+        return {
+            id: videoId,
+            channel: channelName,
+            title: videoTitle
+        };
+    }
+    return null;
+}
+
+
 
 // Function to update the indicator with analysis results
 function updateIndicator(videoElement, analysis) {
