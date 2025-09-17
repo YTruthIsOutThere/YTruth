@@ -1,4 +1,6 @@
 // scripts/content.js
+console.log("YTruth content script loaded!");
+
 
 // Function to create and inject the initial "Analyze" button or reload symbol
 function createInitialIndicator(videoElement) {
