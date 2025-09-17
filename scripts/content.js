@@ -57,17 +57,44 @@ function getIndicatorColor(leaning) {
 
 // Helper function to extract video data
 function getVideoData(videoElement) {
-    const videoId = videoElement.querySelector('#video-title').href.split('=')[1];
-    const channelName = videoElement.querySelector('#channel-name a').textContent;
-    const videoTitle = videoElement.querySelector('#video-title').textContent;
+    const titleElement = videoElement.querySelector('#video-title');
+    if (!titleElement) {
+        console.error("No #video-title found in videoElement");
+        return null;
+    }
+
+    // Find the nearest link containing the title
+    let titleLink = titleElement.closest('a[href*="watch?v="]');
+    if (!titleLink) {
+        titleLink = videoElement.querySelector('a[href*="watch?v="]');
+    }
+    if (!titleLink || !titleLink.href) {
+        console.error("No valid title link found");
+        return null;
+    }
+
+    // Extract video ID safely
+    let videoId;
+    try {
+        const url = new URL(titleLink.href);
+        videoId = url.searchParams.get('v');
+    } catch (error) {
+        console.error("Error parsing video URL:", error);
+        return null;
+    }
+
+    // Extract channel name
+    const channelElement = videoElement.querySelector('#channel-name a');
+    const channelName = channelElement ? channelElement.textContent.trim() : null;
+
+    // Extract title
+    const videoTitle = titleElement.textContent.trim();
 
     if (videoId && channelName && videoTitle) {
-        return {
-            id: videoId,
-            channel: channelName,
-            title: videoTitle
-        };
+        return { id: videoId, channel: channelName, title: videoTitle };
     }
+
+    console.error("Missing video data:", { videoId, channelName, videoTitle });
     return null;
 }
 
