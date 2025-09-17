@@ -6,8 +6,6 @@
 const channelDbUrl = 'https://raw.githubusercontent.com/YTruthIsOutThere/YTruth/main/data/bias_database.json';
 const videoDbUrl = 'https://raw.githubusercontent.com/YTruthIsOutThere/YTruth/main/data/video_database.json';
 
-// We no longer need to import the token in the client-side code
-// import { HUGGING_FACE_TOKEN } from "./config.js";
 
 let channelDatabase = {};
 let videoDatabase = {};
