@@ -134,7 +134,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             // Tier 1: Check the static video database from GitHub
             if (videoDatabase[id]) {
                 const analysis = videoDatabase[id];
-                // sendResponse({ analysis }); // REDUNDANT - REMOVE
                 chrome.tabs.sendMessage(sender.tab.id, {
                     type: "analysis_result",
                     videoId: id,
@@ -146,7 +145,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             // Tier 2: Check the client-side cache (IndexedDB)
             const cachedAnalysis = await getAnalysisFromDB(id);
             if (cachedAnalysis) {
-                // sendResponse({ analysis: cachedAnalysis }); // REDUNDANT - REMOVE
                 chrome.tabs.sendMessage(sender.tab.id, {
                     type: "analysis_result",
                     videoId: id,
@@ -163,7 +161,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     tooltip: `Political Leaning: ${data.political_leaning}, Factuality: ${data.factuality}`,
                     political_leaning: data.political_leaning
                 };
-                // sendResponse({ analysis }); // REDUNDANT - REMOVE
                 chrome.tabs.sendMessage(sender.tab.id, {
                     type: "analysis_result",
                     videoId: id,
@@ -175,7 +172,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             // Tier 4: If all else fails, use the AI API
             const aiAnalysis = await getAIAnalysis(videoData);
             await saveAnalysisToDB(id, aiAnalysis);
-            // sendResponse({ analysis: aiAnalysis }); // REDUNDANT - REMOVE
             
             chrome.tabs.sendMessage(sender.tab.id, {
                 type: "analysis_result",
