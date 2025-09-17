@@ -1,0 +1,47 @@
+// data/bias_database.json
+{
+  "channels": {
+    "CNN": {
+      "factuality": "High",
+      "editorial_bias": "News",
+      "political_leaning": "Center-Left",
+      "notes": "Verified by multiple sources including Ad Fontes and MBFC."
+    },
+    "The New York Times": {
+      "factuality": "High",
+      "editorial_bias": "News",
+      "political_leaning": "Center-Left",
+      "notes": "Known for in-depth journalism; opinion section is distinct."
+    },
+    "Fox News": {
+      "factuality": "Mixed",
+      "editorial_bias": "Opinion/Commentary",
+      "political_leaning": "Right",
+      "notes": "Factuality score varies widely between news and opinion segments."
+    },
+    "Vox": {
+      "factuality": "High",
+      "editorial_bias": "Explanatory Journalism",
+      "political_leaning": "Center-Left",
+      "notes": "Focuses on providing context and deeper explanations of topics."
+    },
+    "Natural News": {
+      "factuality": "Low",
+      "editorial_bias": "Conspiracy/Pseudoscience",
+      "political_leaning": "Far-Right",
+      "notes": "Frequently promotes misinformation and unproven theories."
+    },
+    "The Wall Street Journal": {
+      "factuality": "High",
+      "editorial_bias": "News",
+      "political_leaning": "Center-Right",
+      "notes": "Known for a strong business and financial focus."
+    },
+    "The Hill": {
+      "factuality": "High",
+      "editorial_bias": "News/Analysis",
+      "political_leaning": "Centrist",
+      "notes": "Focuses on political news and legislative developments in the U.S."
+    }
+  }
+}
