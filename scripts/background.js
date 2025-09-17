@@ -162,6 +162,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             const aiAnalysis = await getAIAnalysis(videoData);
             await saveAnalysisToDB(id, aiAnalysis);
             sendResponse({ analysis: aiAnalysis });
+
+            chrome.tabs.sendMessage(sender.tab.id, {
+                type: "analysis_result",
+                videoId: id,
+                analysis: aiAnalysis
+            });
+            
         })();
         return true;
     }
