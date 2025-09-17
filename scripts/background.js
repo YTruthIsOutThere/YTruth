@@ -1,5 +1,7 @@
 // scripts/background.js
 
+console.log("YTruth background.js script loaded.");
+
 // --- 1. Database and API Setup ---
 
 // GitHub Raw URL for the databases. REPLACE WITH YOURS.
