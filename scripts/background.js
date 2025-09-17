@@ -105,17 +105,19 @@ async function saveAnalysisToDB(videoId, analysis) {
 async function getAIAnalysis(videoData) {
   const VERCEL_URL = "https://ytruth-epr6esvk7-ytruthisouttheres-projects.vercel.app";
   
-  try {
-    const response = await fetch(`${VERCEL_URL}/api/analyze`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ videoData })
-    });
-    
-    const result = await response.json();
-    const aiLabels = result.labels; 
+    try {
+            console.log("Requesting AI analysis for video:", videoData.id);
+            const response = await fetch(`${VERCEL_URL}/api/analyze`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ videoData })
+            });
+            if (!response.ok) {
+                throw new Error(`AI API error: ${response.status}`);
+            }
+            const result = await response.json();
+            console.log("AI response:", result);
+            const aiLabels = result.labels || [];
     
     const factuality = aiLabels.includes("High") ? "High" : aiLabels.includes("Mixed") ? "Mixed" : "Low";
     const politicalness = aiLabels.includes("Political") ? "Political" : "Non-Political";
@@ -129,13 +131,13 @@ async function getAIAnalysis(videoData) {
 
     return analysis;
   } catch (error) {
-    console.error("AI analysis failed:", error);
-    return { 
-      text: 'AI Failed', 
-      tooltip: 'AI analysis could not be completed.',
-      political_leaning: "Non-Political"
-    };
-  }
+        console.error("AI analysis failed:", error);
+        return { 
+            text: 'AI Failed', 
+            tooltip: 'AI analysis could not be completed.',
+            political_leaning: "Non-Political"
+        };
+    }
 }
 
 // --- 4. Main Message Listener ---
