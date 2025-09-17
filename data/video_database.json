@@ -1,0 +1,23 @@
+// It will be populated by the AI analysis and the caching system.
+{
+  "videos": {
+    "VIDEO_ID_1": {
+      "channel": "CNN",
+      "title": "A Look at the Latest Political Polls",
+      "factuality": "High",
+      "editorial_bias": "News",
+      "political_leaning": "Center-Left",
+      "source": "manual_review",
+      "last_analyzed": "2025-09-17"
+    },
+    "VIDEO_ID_2": {
+      "channel": "Vox",
+      "title": "Why the Electoral College exists",
+      "factuality": "High",
+      "editorial_bias": "Educational",
+      "political_leaning": "Center-Left",
+      "source": "ai_analysis",
+      "last_analyzed": "2025-09-17"
+    }
+  }
+}
