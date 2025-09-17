@@ -10,21 +10,31 @@ const videoDbUrl = 'https://raw.githubusercontent.com/YTruthIsOutThere/YTruth/ma
 let channelDatabase = {};
 let videoDatabase = {};
 
-// Fetch databases on service worker start.
 async function fetchDatabases() {
     try {
+        // Fetch channel database
         const channelRes = await fetch(channelDbUrl);
-        const videoRes = await fetch(videoDbUrl);
-        
+        if (!channelRes.ok) { // Check for HTTP errors
+            throw new Error(`HTTP error! status: ${channelRes.status} for channel DB`);
+        }
         const channelData = await channelRes.json();
-        const videoData = await videoRes.json();
-        
         channelDatabase = channelData.channels;
+
+        // Fetch video database
+        const videoRes = await fetch(videoDbUrl);
+        if (!videoRes.ok) { // Check for HTTP errors
+            throw new Error(`HTTP error! status: ${videoRes.status} for video DB`);
+        }
+        const videoData = await videoRes.json();
         videoDatabase = videoData.videos;
         
         console.log("Databases fetched successfully from GitHub.");
     } catch (error) {
+        // This console log will now only appear if there's an actual error.
         console.error("Failed to fetch databases from GitHub:", error);
+        // You might want to reset databases to empty arrays if fetching fails
+        channelDatabase = {};
+        videoDatabase = {};
     }
 }
 
