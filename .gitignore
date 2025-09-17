@@ -1,0 +1,2 @@
+# Ignore API keys and configuration files
+/scripts/config.js
