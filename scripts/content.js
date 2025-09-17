@@ -1,34 +1,36 @@
 // scripts/content.js
 console.log("YTruth content script loaded!");
 
-// Function to create and inject the initial "Analyze" button or reload symbol
-function createInitialIndicator(videoElement) {
-    let indicator = videoElement.querySelector('.ytruth-indicator');
-    if (indicator) return; // Indicator already exists
+// --- Main logic: find and process videos ---
+function processVideos() {
+    console.log("Processing videos...");
+    const videoElements = document.querySelectorAll('ytd-rich-grid-media, ytd-compact-video-renderer, ytd-video-renderer');
+    videoElements.forEach(videoElement => {
+        createInitialIndicator(videoElement);
+    });
+}
 
-    indicator = document.createElement('span');
-    indicator.className = 'ytruth-indicator';
-    indicator.textContent = '🔍'; // Magnifying glass emoji
-    indicator.title = 'Click to analyze';
-
-    indicator.addEventListener('click', (event) => {
-        event.stopPropagation(); // Prevent navigating to the video
-        const videoData = getVideoData(videoElement);
-        if (videoData) {
-            console.log("Requesting analysis for:", videoData.title);
-            chrome.runtime.sendMessage({
-                type: 'analyze_video',
-                videoData: videoData
-            });
-            indicator.textContent = '⏳'; // Change to hourglass while loading
+// Use a MutationObserver to detect when new videos are added to the page.
+const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+        if (mutation.addedNodes.length > 0) { // Check for added nodes before processing
+            processVideos();
         }
     });
+});
 
-    const videoTitleElement = videoElement.querySelector('#video-title');
-    if (videoTitleElement) {
-        videoTitleElement.after(indicator);
-    }
+// Start observing a more general target that works on all pages.
+// The document.body is the most reliable target for dynamic content.
+const mainContent = document.body;
+if (mainContent) {
+    observer.observe(mainContent, { childList: true, subtree: true });
+    console.log("MutationObserver is active.");
+} else {
+    console.error("Could not find a valid target for MutationObserver.");
 }
+
+// Initial run to catch videos already loaded on the page.
+processVideos();
 
 // Function to update the indicator with analysis results
 function updateIndicator(videoElement, analysis) {
