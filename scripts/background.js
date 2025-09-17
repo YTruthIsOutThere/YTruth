@@ -91,7 +91,7 @@ async function saveAnalysisToDB(videoId, analysis) {
 
 async function getAIAnalysis(videoData) {
   const { title, channel } = videoData;
-  const VERCEL_URL = "ytruth-epr6esvk7-ytruthisouttheres-projects.vercel.app";
+  const VERCEL_URL = "https://ytruth-epr6esvk7-ytruthisouttheres-projects.vercel.app";
   
   try {
     const response = await fetch(`${VERCEL_URL}/api/analyze`, {
