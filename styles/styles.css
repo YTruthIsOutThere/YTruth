@@ -1,0 +1,21 @@
+/* styles/styles.css */
+
+.ytruth-indicator {
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+  margin-left: 8px;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.ytruth-political {
+  background-color: #f44336; /* Red for political */
+}
+
+.ytruth-factuality-high {
+  background-color: #4caf50; /* Green for high factuality */
+}
