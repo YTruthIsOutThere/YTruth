@@ -6,10 +6,8 @@
 const channelDbUrl = 'https://raw.githubusercontent.com/YTruthIsOutThere/YTruth/main/data/bias_database.json';
 const videoDbUrl = 'https://raw.githubusercontent.com/YTruthIsOutThere/YTruth/main/data/video_database.json';
 
-
-
-// Load it from a separate, untracked file or environment variable.
-import { HUGGING_FACE_TOKEN } from "./config.js";
+// We no longer need to import the token in the client-side code
+// import { HUGGING_FACE_TOKEN } from "./config.js";
 
 let channelDatabase = {};
 let videoDatabase = {};
@@ -93,52 +91,37 @@ async function saveAnalysisToDB(videoId, analysis) {
 
 async function getAIAnalysis(videoData) {
   const { title, channel } = videoData;
-  const prompt = `This is a video by "${channel}" titled "${title}". Classify its factuality, politicalness, and editorial bias.`;
+  const VERCEL_URL = "ytruth-epr6esvk7-ytruthisouttheres-projects.vercel.app";
   
   try {
-    const response = await fetch("https://api-inference.huggingface.co/models/facebook/bart-large-mnli", {
-      headers: { Authorization: `Bearer ${HUGGING_FACE_TOKEN}` },
+    const response = await fetch(`${VERCEL_URL}/api/analyze`, {
       method: "POST",
-      body: JSON.stringify({
-        inputs: prompt,
-        parameters: { 
-          candidate_labels: ["high factuality", "low factuality", "political", "non-political", "opinion", "news", "educational"]
-        }
-      })
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ videoData })
     });
     
     const result = await response.json();
-    const scores = {};
+    const aiLabels = result.labels; 
     
-    // We can use a simpler approach to get the scores directly
-    // based on our candidate labels.
-    for (let i = 0; i < result.labels.length; i++) {
-        const label = result.labels[i];
-        const score = result.scores[i];
-        
-        if (label === "high factuality") scores.factuality = score;
-        if (label === "political") scores.politicalness = score;
-        if (label === "opinion") scores.editorial_bias = score; // This is a simplified example
-    }
-
-    // Combine results into our final analysis object
+    const factuality = aiLabels.includes("High") ? "High" : aiLabels.includes("Mixed") ? "Mixed" : "Low";
+    const politicalness = aiLabels.includes("Political") ? "Political" : "Non-Political";
+    const editorial_bias = aiLabels.includes("News") ? "News" : aiLabels.includes("Opinion/Commentary") ? "Opinion/Commentary" : aiLabels.includes("Educational/Instructional") ? "Educational/Instructional" : aiLabels.includes("Conspiracy/Pseudoscience") ? "Conspiracy/Pseudoscience" : "Entertainment";
+    
     const analysis = {
-      factuality: scores.factuality,
-      politicalness: scores.politicalness,
-      editorial_bias: scores.editorial_bias,
-      text: `${(scores.politicalness * 100).toFixed(0)}% Pol`,
-      tooltip: `Political: ${(scores.politicalness * 100).toFixed(2)}%\nFactuality: ${(scores.factuality * 100).toFixed(2)}%\nOpinion: ${(scores.editorial_bias * 100).toFixed(2)}%`,
+      text: `${politicalness.charAt(0)} · ${factuality.charAt(0)} · ${editorial_bias.charAt(0)}`,
+      tooltip: `Political: ${politicalness}\nFactuality: ${factuality}\nBias: ${editorial_bias}`,
+      political_leaning: politicalness
     };
 
     return analysis;
   } catch (error) {
     console.error("AI analysis failed:", error);
     return { 
-      factuality: 0,
-      politicalness: 0,
-      editorial_bias: 0,
-      text: 'AI Failed',
-      tooltip: 'AI analysis could not be completed.'
+      text: 'AI Failed', 
+      tooltip: 'AI analysis could not be completed.',
+      political_leaning: "Non-Political"
     };
   }
 }
