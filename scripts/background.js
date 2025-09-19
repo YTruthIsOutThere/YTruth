@@ -18,24 +18,24 @@ async function fetchDatabases() {
     dbFetchAttempted = true;
 
     try {
-        console.log("Fetching databases...");
+        console.log("YTruth : Fetching databases...");
         // Fetch channel database
         const channelRes = await fetch(channelDbUrl);
         if (!channelRes.ok) {
-            throw new Error(`HTTP error! status: ${channelRes.status} for channel DB`);
+            throw new Error(`YTruth : HTTP error! status: ${channelRes.status} for channel DB`);
         }
         channelDatabase = (await channelRes.json()).channels || {};
 
         // Fetch video database
         const videoRes = await fetch(videoDbUrl);
         if (!videoRes.ok) {
-            throw new Error(`HTTP error! status: ${videoRes.status} for video DB`);
+            throw new Error(`YTruth : HTTP error! status: ${videoRes.status} for video DB`);
         }
         videoDatabase = (await videoRes.json()).videos || {};
 
-        console.log("Databases fetched successfully:", Object.keys(channelDatabase).length, "channels;", Object.keys(videoDatabase).length, "videos.");
+        console.log("YTruth : Databases fetched successfully:", Object.keys(channelDatabase).length, "channels;", Object.keys(videoDatabase).length, "videos.");
     } catch (error) {
-        console.error("Failed to fetch databases:", error);
+        console.error("YTruth : Failed to fetch databases:", error);
         channelDatabase = {};
         videoDatabase = {};
     }
@@ -76,7 +76,7 @@ async function getAnalysisFromDB(videoId) {
       }
     };
     getRequest.onerror = (event) => {
-      console.error("IndexedDB get error:", event.target.error);
+      console.error("YTruth : IndexedDB get error:", event.target.error);
       reject(event.target.error);
     };
   });
@@ -93,7 +93,7 @@ async function saveAnalysisToDB(videoId, analysis) {
       resolve(true);
     };
     transaction.onerror = (event) => {
-      console.error("IndexedDB save error:", event.target.error);
+      console.error("YTruth : IndexedDB save error:", event.target.error);
       reject(event.target.error);
     };
   });
@@ -116,7 +116,7 @@ async function getAIAnalysis(videoData) {
                 throw new Error(`AI API error: ${response.status}`);
             }
             const result = await response.json();
-            console.log("AI response:", result);
+            console.log("YTruth : AI response:", result);
             const aiLabels = result.labels || [];
     
     const factuality = aiLabels.includes("High") ? "High" : aiLabels.includes("Mixed") ? "Mixed" : "Low";
@@ -131,7 +131,7 @@ async function getAIAnalysis(videoData) {
 
     return analysis;
   } catch (error) {
-        console.error("AI analysis failed:", error);
+        console.error("YTruth : AI analysis failed:", error);
         return { 
             text: 'AI Failed', 
             tooltip: 'AI analysis could not be completed.',
