@@ -5,14 +5,14 @@ console.log("YTruth content script loaded!");
 function getVideoData(videoElement) {
     const titleElement = videoElement.querySelector('#video-title');
     if (!titleElement) {
-        console.error("No #video-title found in videoElement");
+        console.error("YTruth : No #video-title found in videoElement");
         return null;
     }
 
     let titleLink = titleElement.closest('a[href*="watch?v="]') || 
                    videoElement.querySelector('a[href*="watch?v="]');
     if (!titleLink || !titleLink.href) {
-        console.error("No valid title link found");
+        console.error("YTruth : No valid title link found");
         return null;
     }
 
@@ -21,7 +21,7 @@ function getVideoData(videoElement) {
         const url = new URL(titleLink.href);
         videoId = url.searchParams.get('v');
     } catch (error) {
-        console.error("Error parsing video URL:", error);
+        console.error("YTruth : Error parsing video URL:", error);
         return null;
     }
 
@@ -33,7 +33,7 @@ function getVideoData(videoElement) {
         return { id: videoId, channel: channelName, title: videoTitle };
     }
 
-    console.error("Missing video data:", { videoId, channelName, videoTitle });
+    console.error("YTruth : Missing video data:", { videoId, channelName, videoTitle });
     return null;
 }
 
@@ -45,24 +45,36 @@ function getIndicatorColor(leaning) {
 }
 
 function createInitialIndicator(videoElement) {
+    let indicator = videoElement.querySelector('.ytruth-indicator');
+    if (indicator) return; // Indicator already exists
+
     const videoData = getVideoData(videoElement);
     if (!videoData) return;
 
-    const indicator = document.createElement('span');
+    indicator = document.createElement('span');
     indicator.className = 'ytruth-indicator';
-    indicator.textContent = '...';
-    indicator.style.backgroundColor = '#bdc3c7';
+    indicator.textContent = '🔍'; // Magnifying glass emoji
+    indicator.title = 'Click to analyze';
+
+    indicator.addEventListener('click', (event) => {
+        event.stopPropagation(); // Prevent navigating to the video
+        if (videoData) {
+            console.log("YTruth : Requesting analysis for:", videoData.title);
+            chrome.runtime.sendMessage({
+                type: 'analyze_video',
+                videoData: videoData
+            });
+            indicator.textContent = '⏳'; // Change to hourglass while loading
+        }
+    });
 
     const videoTitleElement = videoElement.querySelector('#video-title');
     if (videoTitleElement) {
         videoTitleElement.after(indicator);
+        console.log(`YTruth : Indicator created for video: "${videoData.title}"`);
+    } else {
+        console.warn(`YTruth : Could not find title element to attach indicator for video with ID: ${videoData.id}`);
     }
-
-    // Send message to background script for analysis
-    chrome.runtime.sendMessage({
-        type: 'analyze_video',
-        videoData: videoData
-    });
 }
 
 function updateIndicator(videoElement, analysis) {
@@ -83,10 +95,12 @@ function updateIndicator(videoElement, analysis) {
 
 // --- Main processing logic ---
 function processVideos() {
-    console.log("Processing videos...");
+    console.log("YTruth : Processing videos...");
     const videoElements = document.querySelectorAll(
-        'ytd-rich-grid-media, ytd-compact-video-renderer, ytd-video-renderer, ytd-grid-video-renderer'
+        'ytd-rich-grid-media, ytd-compact-video-renderer, ytd-video-renderer, ytd-grid-video-renderer, ytd-playlist-video-renderer'
     );
+    
+    console.log(`YTruth : Found ${videoElements.length} video elements.`);
     
     videoElements.forEach(videoElement => {
         if (!videoElement.querySelector('.ytruth-indicator')) {
@@ -105,19 +119,17 @@ function initObserver() {
         });
     });
 
-    // Try multiple possible containers
-    const observeTarget = document.querySelector('ytd-page-manager') || 
-                         document.querySelector('ytd-app') || 
-                         document.body;
+    // Use a more reliable, top-level target
+    const observeTarget = document.body;
     
     if (observeTarget) {
         observer.observe(observeTarget, { 
             childList: true, 
             subtree: true 
         });
-        console.log("MutationObserver is active.");
+        console.log("YTruth : MutationObserver is active, observing document.body.");
     } else {
-        console.error("Could not find a valid target for MutationObserver.");
+        console.error("YTruth : Could not find a valid target for MutationObserver.");
     }
 }
 
@@ -135,7 +147,7 @@ processVideos();
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.type === 'analysis_result') {
         const videoElements = document.querySelectorAll(
-            'ytd-rich-grid-media, ytd-compact-video-renderer, ytd-video-renderer, ytd-grid-video-renderer'
+            'ytd-rich-grid-media, ytd-compact-video-renderer, ytd-video-renderer, ytd-grid-video-renderer, ytd-playlist-video-renderer'
         );
         
         videoElements.forEach(videoElement => {
