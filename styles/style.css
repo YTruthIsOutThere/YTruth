@@ -1,25 +1,24 @@
-/* styles/styles.css */
-
+/* Add to existing styles */
 .ytruth-indicator {
-    display: inline-block;
-    padding: 2px 6px;
-    margin-left: 5px;
-    border-radius: 4px;
-    font-size: 14px;
-    font-weight: bold;
+    border: 2px solid #ff0000 !important; /* Red border for visibility */
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* Add debug overlay */
+body::before {
+    content: "YTruth Debug Mode Active";
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: rgba(255,0,0,0.8);
     color: white;
-    cursor: pointer;
-    background-color: #bdc3c7; /* Default background */
-}
-
-.ytruth-indicator:hover {
-    opacity: 0.8;
-}
-
-.ytruth-political {
-  background-color: #f44336; /* Red for political */
-}
-
-.ytruth-factuality-high {
-  background-color: #4caf50; /* Green for high factuality */
+    padding: 10px;
+    z-index: 9999;
+    font-family: Arial;
 }
