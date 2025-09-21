@@ -3,19 +3,45 @@ console.log("YTruth content script loaded!");
 
 // --- Helper functions ---
 function getVideoData(videoElement) {
-    const titleElement = videoElement.querySelector('#video-title');
-    if (!titleElement) {
-        console.error("YTruth : No #video-title found in videoElement");
-        return null;
+    // Attempt to find the new title element
+    const titleLink = videoElement.querySelector('a.yt-lockup-metadata-view-model__title');
+    if (!titleLink) {
+        // Fallback to the old method if the new one fails
+        console.error("YTruth : No new title link found, falling back to old selectors.");
+        const oldTitleElement = videoElement.querySelector('#video-title');
+        if (!oldTitleElement) {
+             console.error("YTruth : No #video-title found in videoElement");
+             return null;
+        }
+        const oldTitleLink = oldTitleElement.closest('a[href*="watch?v="]') ||
+                             videoElement.querySelector('a[href*="watch?v="]');
+        if (!oldTitleLink || !oldTitleLink.href) {
+            console.error("YTruth : No valid old title link found");
+            return null;
+        }
+
+        // Return data using old selectors
+        let videoId;
+        try {
+            const url = new URL(oldTitleLink.href);
+            videoId = url.searchParams.get('v');
+        } catch (error) {
+            console.error("YTruth : Error parsing video URL:", error);
+            return null;
+        }
+
+        const channelElement = videoElement.querySelector('#channel-name a, yt-formatted-string#channel-name a');
+        const channelName = channelElement ? channelElement.textContent.trim() : null;
+        const videoTitle = oldTitleElement.textContent.trim();
+        
+        if (videoId && channelName && videoTitle) {
+            return { id: videoId, channel: channelName, title: videoTitle };
+        }
+         console.error("YTruth : Missing video data from old selectors:", { videoId, channelName, videoTitle });
+         return null;
     }
 
-    let titleLink = titleElement.closest('a[href*="watch?v="]') ||
-                   videoElement.querySelector('a[href*="watch?v="]');
-    if (!titleLink || !titleLink.href) {
-        console.error("YTruth : No valid title link found");
-        return null;
-    }
-
+    const videoTitle = titleLink.textContent.trim();
     let videoId;
     try {
         const url = new URL(titleLink.href);
@@ -25,15 +51,15 @@ function getVideoData(videoElement) {
         return null;
     }
 
-    const channelElement = videoElement.querySelector('#channel-name a, yt-formatted-string#channel-name a');
+    // Attempt to find the channel name. This selector may also need to be updated.
+    const channelElement = videoElement.querySelector('#channel-name a, yt-formatted-string#channel-name a, yt-lockup-byline-view-model__byline a');
     const channelName = channelElement ? channelElement.textContent.trim() : null;
-    const videoTitle = titleElement.textContent.trim();
 
     if (videoId && channelName && videoTitle) {
         return { id: videoId, channel: channelName, title: videoTitle };
     }
 
-    console.error("YTruth : Missing video data:", { videoId, channelName, videoTitle });
+    console.error("YTruth : Missing video data from new selectors:", { videoId, channelName, videoTitle });
     return null;
 }
 
