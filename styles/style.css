@@ -1,15 +1,38 @@
 /* Add to existing styles */
 .ytruth-indicator {
-    /* Make the indicator very obvious for debugging */
-    border: 3px dashed #ffff00 !important; /* Bright yellow dashed border */
-    background-color: rgba(255, 255, 0, 0.3) !important; /* Semi-transparent yellow background */
-    color: #000000 !important; /* Black text for contrast */
+    border: 3px dashed #ffff00 !important;
+    background-color: rgba(255, 255, 0, 0.3) !important;
+    color: #000000 !important;
     padding: 2px 4px !important;
     margin-left: 5px !important;
     font-weight: bold;
     cursor: pointer;
-    animation: none; /* Disable the pulse animation for debugging */
+    animation: none;
     border-radius: 4px;
+}
+
+/* Style for the new percentage score indicator */
+.ytruth-score-percent {
+    border: none !important;
+    background-color: #e6f0f5 !important;
+    color: #333333 !important;
+    border-radius: 5px;
+    padding: 2px 6px !important;
+}
+
+/* Style for the pending analysis indicator */
+.ytruth-pending {
+    background-color: #f5f5dc; /* beige */
+    color: #555555;
+    font-weight: normal;
+    animation: pulse 1.5s infinite;
+}
+
+.ytruth-loading {
+    background-color: #add8e6; /* light blue */
+    color: #333333;
+    font-weight: normal;
+    animation: pulse 1s infinite;
 }
 
 @keyframes pulse {
@@ -19,7 +42,7 @@
 }
 
 /* Add debug overlay */
-body::before {
+/* body::before {
     content: "YTruth Debug Mode Active";
     position: fixed;
     top: 10px;
@@ -32,3 +55,4 @@ body::before {
     font-size: 16px;
     border-radius: 5px;
 }
+    */
