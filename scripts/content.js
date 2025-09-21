@@ -9,7 +9,7 @@ function getVideoData(videoElement) {
         return null;
     }
 
-    let titleLink = titleElement.closest('a[href*="watch?v="]') || 
+    let titleLink = titleElement.closest('a[href*="watch?v="]') ||
                    videoElement.querySelector('a[href*="watch?v="]');
     if (!titleLink || !titleLink.href) {
         console.error("YTruth : No valid title link found");
@@ -97,7 +97,7 @@ function updateIndicator(videoElement, analysis) {
 function processVideos() {
     console.log("YTruth : Processing videos...");
     const videoElements = document.querySelectorAll(
-        'ytd-rich-grid-media, ytd-compact-video-renderer, ytd-video-renderer, ytd-grid-video-renderer, ytd-playlist-video-renderer'
+        'ytd-rich-grid-media, ytd-compact-video-renderer, ytd-video-renderer, ytd-grid-video-renderer, ytd-playlist-video-renderer, yt-lockup-view-model'
     );
     
     console.log(`YTruth : Found ${videoElements.length} video elements.`);
@@ -147,7 +147,7 @@ processVideos();
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.type === 'analysis_result') {
         const videoElements = document.querySelectorAll(
-            'ytd-rich-grid-media, ytd-compact-video-renderer, ytd-video-renderer, ytd-grid-video-renderer, ytd-playlist-video-renderer'
+            'ytd-rich-grid-media, ytd-compact-video-renderer, ytd-video-renderer, ytd-grid-video-renderer, ytd-playlist-video-renderer, yt-lockup-view-model'
         );
         
         videoElements.forEach(videoElement => {
