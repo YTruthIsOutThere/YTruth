@@ -3,55 +3,39 @@ console.log("YTruth content script loaded!");
 
 // --- Helper functions ---
 function getVideoData(videoElement) {
-    const titleLink = videoElement.querySelector('a.yt-lockup-metadata-view-model__title');
-    if (titleLink) {
-        const videoTitle = titleLink.textContent.trim();
-        let videoId;
-        try {
-            const url = new URL(titleLink.href, window.location.origin);
-            videoId = url.searchParams.get('v');
-        } catch (error) {
-            console.error("YTruth : Error parsing video URL:", error);
-            return null;
-        }
-
-        const channelElement = videoElement.querySelector('a.yt-lockup-byline-view-model__byline');
-        const channelName = channelElement ? channelElement.textContent.trim() : null;
-
-        if (videoId && channelName && videoTitle) {
-            return { id: videoId, channel: channelName, title: videoTitle };
-        }
-        console.error("YTruth : Missing video data from new selectors:", { videoId, channelName, videoTitle });
+    const titleElement = videoElement.querySelector('#video-title');
+    if (!titleElement) {
+        console.warn("YTruth : No #video-title found in videoElement. Skipping.");
         return null;
     }
 
-    // Fallback to old selectors if new ones are not found
-    const oldTitleElement = videoElement.querySelector('#video-title');
-    if (!oldTitleElement) {
-        return null;
-    }
-
-    let oldTitleLink = oldTitleElement.closest('a[href*="watch?v="]');
-    if (!oldTitleLink) {
+    const titleLink = titleElement.closest('a[href*="watch?v="]') || 
+                   videoElement.querySelector('a[href*="watch?v="]');
+    if (!titleLink || !titleLink.href) {
+        console.warn("YTruth : No valid title link found. Skipping.");
         return null;
     }
 
     let videoId;
     try {
-        const url = new URL(oldTitleLink.href, window.location.origin);
+        const url = new URL(titleLink.href);
         videoId = url.searchParams.get('v');
     } catch (error) {
+        console.error("YTruth : Error parsing video URL:", error);
         return null;
     }
 
     const channelElement = videoElement.querySelector('#channel-name a, yt-formatted-string#channel-name a');
     const channelName = channelElement ? channelElement.textContent.trim() : null;
-    const videoTitle = oldTitleElement.textContent.trim();
+    const videoTitle = titleElement.textContent.trim();
     
-    if (videoId && channelName && videoTitle) {
-        return { id: videoId, channel: channelName, title: videoTitle };
+    // Add an explicit check for valid data before returning
+    if (!videoId || !channelName || !videoTitle) {
+        console.warn("YTruth : Missing video data after extraction:", { videoId, channelName, videoTitle });
+        return null;
     }
-    return null;
+
+    return { id: videoId, channel: channelName, title: videoTitle };
 }
 
 function getIndicatorColor(leaning) {
@@ -63,80 +47,59 @@ function getIndicatorColor(leaning) {
 
 function createInitialIndicator(videoElement) {
     let indicator = videoElement.querySelector('.ytruth-indicator');
-    if (indicator) return;
+    if (indicator) return; // Indicator already exists
 
     const videoData = getVideoData(videoElement);
-    if (!videoData) return;
+    if (!videoData) {
+      console.warn("YTruth : Could not create indicator due to missing video data.");
+      return;
+    }
 
     indicator = document.createElement('span');
     indicator.className = 'ytruth-indicator';
-    indicator.textContent = '🔍';
+    indicator.textContent = '🔍'; // Magnifying glass emoji
     indicator.title = 'Click to analyze';
 
     indicator.addEventListener('click', (event) => {
-        event.stopPropagation();
+        event.stopPropagation(); // Prevent navigating to the video
         if (videoData) {
+            console.log("YTruth : Requesting analysis for:", videoData.title);
+            // Change indicator text to show loading state
+            indicator.textContent = '⏳';
+            indicator.style.backgroundColor = '#f1c40f'; // A yellow-ish color for loading
+            indicator.title = 'Loading analysis...';
+
             chrome.runtime.sendMessage({
                 type: 'analyze_video',
                 videoData: videoData
             });
-            indicator.textContent = '⏳';
-            indicator.classList.add('ytruth-indicator-loading');
         }
     });
 
-    const thumbnailContainer = videoElement.querySelector('yt-thumbnail-view-model');
-    if (thumbnailContainer) {
-        thumbnailContainer.appendChild(indicator);
+    const videoTitleElement = videoElement.querySelector('#video-title');
+    if (videoTitleElement) {
+        videoTitleElement.after(indicator);
+        console.log(`YTruth : Indicator created for video: "${videoData.title}"`);
+    } else {
+        console.warn(`YTruth : Could not find title element to attach indicator for video with ID: ${videoData.id}`);
     }
-}
-
-function createMainVideoIndicator() {
-    const player = document.getElementById('movie_player');
-    if (!player) return;
-
-    if (player.querySelector('.ytruth-indicator')) return;
-
-    const indicator = document.createElement('span');
-    indicator.className = 'ytruth-indicator ytruth-main-video-overlay';
-    indicator.textContent = '🔍';
-    indicator.title = 'Click to analyze main video';
-
-    indicator.addEventListener('click', (event) => {
-        event.stopPropagation();
-        const urlParams = new URLSearchParams(window.location.search);
-        const videoId = urlParams.get('v');
-        if (videoId) {
-            const videoData = {
-                id: videoId,
-                channel: 'Unknown Channel', // This needs to be scraped
-                title: 'Unknown Title' // This needs to be scraped
-            };
-
-            chrome.runtime.sendMessage({
-                type: 'analyze_video',
-                videoData: videoData
-            });
-            indicator.textContent = '⏳';
-            indicator.classList.add('ytruth-indicator-loading');
-        }
-    });
-
-    player.appendChild(indicator);
 }
 
 function updateIndicator(videoElement, analysis) {
     let indicator = videoElement.querySelector('.ytruth-indicator');
     if (!indicator) {
+        console.warn("YTruth : Attempted to update a non-existent indicator. Creating a new one.");
         indicator = document.createElement('span');
         indicator.className = 'ytruth-indicator';
-        const thumbnailContainer = videoElement.querySelector('yt-thumbnail-view-model');
-        if (thumbnailContainer) {
-            thumbnailContainer.appendChild(indicator);
+        const videoTitleElement = videoElement.querySelector('#video-title');
+        if (videoTitleElement) {
+            videoTitleElement.after(indicator);
+        } else {
+            console.error("YTruth : Could not create indicator during update. Missing title element.");
+            return;
         }
     }
 
-    indicator.classList.remove('ytruth-indicator-loading');
     indicator.textContent = analysis.text;
     indicator.title = analysis.tooltip;
     indicator.style.backgroundColor = getIndicatorColor(analysis.political_leaning);
@@ -144,11 +107,15 @@ function updateIndicator(videoElement, analysis) {
 
 // --- Main processing logic ---
 function processVideos() {
+    console.log("YTruth : Processing videos...");
     const videoElements = document.querySelectorAll(
-        'ytd-rich-grid-media, ytd-compact-video-renderer, ytd-video-renderer, ytd-grid-video-renderer, ytd-playlist-video-renderer, yt-lockup-view-model'
+        'ytd-rich-grid-media, ytd-compact-video-renderer, ytd-video-renderer, ytd-grid-video-renderer, ytd-playlist-video-renderer'
     );
     
+    console.log(`YTruth : Found ${videoElements.length} potential video elements.`);
+    
     videoElements.forEach(videoElement => {
+        // Only process elements that don't have an indicator yet
         if (!videoElement.querySelector('.ytruth-indicator')) {
             createInitialIndicator(videoElement);
         }
@@ -158,14 +125,13 @@ function processVideos() {
 // --- Setup MutationObserver ---
 function initObserver() {
     const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if (mutation.addedNodes.length > 0) {
-                processVideos();
-                createMainVideoIndicator();
-            }
-        });
+        // A check to reduce unnecessary processing
+        if (mutations.some(m => m.addedNodes.length > 0 && m.target.tagName !== 'SPAN')) {
+             processVideos();
+        }
     });
 
+    // Use a more reliable, top-level target
     const observeTarget = document.body;
     
     if (observeTarget) {
@@ -173,6 +139,9 @@ function initObserver() {
             childList: true, 
             subtree: true 
         });
+        console.log("YTruth : MutationObserver is active, observing document.body.");
+    } else {
+        console.error("YTruth : Could not find a valid target for MutationObserver.");
     }
 }
 
@@ -185,13 +154,12 @@ if (document.readyState === 'loading') {
 
 // Initial processing
 processVideos();
-createMainVideoIndicator();
 
 // Listen for analysis results
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.type === 'analysis_result') {
         const videoElements = document.querySelectorAll(
-            'ytd-rich-grid-media, ytd-compact-video-renderer, ytd-video-renderer, ytd-grid-video-renderer, ytd-playlist-video-renderer, yt-lockup-view-model'
+            'ytd-rich-grid-media, ytd-compact-video-renderer, ytd-video-renderer, ytd-grid-video-renderer, ytd-playlist-video-renderer'
         );
         
         videoElements.forEach(videoElement => {
